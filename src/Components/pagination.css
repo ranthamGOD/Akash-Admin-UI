@@ -1,4 +1,4 @@
-.pag-buttons {
+.pagination-buttons {
   margin-top: 15px;
   display: flex;
   justify-content: space-between;
@@ -28,7 +28,7 @@
   border: 0.1px solid #2286f8;
 }
 
-.pag-buttons button:disabled {
+.pagination-buttons button:disabled {
   background-color: #f5f5f5;
   color: rgb(230, 227, 227);
   border: 0.5px solid #ddd;

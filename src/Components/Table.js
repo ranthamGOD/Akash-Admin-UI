@@ -11,7 +11,7 @@ import "./table.css";
 
 const Table = ({
   users,
-  selectedLine,
+  selectedRow,
   handleRowSelect,
   handleEditUser,
   handleDeleteUser,
@@ -19,7 +19,7 @@ const Table = ({
 }) => {
   const [editIt, setEditIt] = useState(null);
 
-  const AllSelect = selectedLine.length === users.length;
+  const AllSelect = selectedRow.length === users.length;
 
   const handleEditing = (user) => {
     setEditIt(user);
@@ -41,7 +41,7 @@ const Table = ({
     }));
   };
 
-  const lineSelected = (user) => selectedLine.includes(user);
+  const rowSelected = (user) => selectedRow.includes(user);
 
   return (
     <div className="table-div">
@@ -71,13 +71,13 @@ const Table = ({
           {users.map((user) => (
             <tr
               key={user.id}
-              className={lineSelected(user) ? "selected-line" : ""}
+              className={rowSelected(user) ? "selected-line" : ""}
             >
               <td>
                 <input
                   className="check"
                   type="checkbox"
-                  checked={lineSelected(user)}
+                  checked={rowSelected(user)}
                   onChange={(event) => handleRowSelect(event, user)}
                 />
               </td>

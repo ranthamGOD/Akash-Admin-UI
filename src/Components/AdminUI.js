@@ -9,26 +9,26 @@ import "./admin.css";
 const AdminUI = () => {
   const [users, setUsers] = useState([]);
   const [filterUsers, setFilterUsers] = useState([]);
-  const [searchText, setSearchText] = useState("");
-  const [selectedLine, setSelectedLine] = useState([]);
+  const [searchBar, setSearchBar] = useState("");
+  const [selectedRow, setSelectedRow] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
-  const [pagUsers, setPagUsers] = useState([]);
+  const [paginationUsers, setPaginationUsers] = useState([]);
 
-  const getData = async () => {
+  const fetchData = async () => {
     try {
-      const response = await axios.get(
+      const res = await axios.get(
         "https://geektrust.s3-ap-southeast-1.amazonaws.com/adminui-problem/members.json"
       );
-      setUsers(response.data);
-      setFilterUsers(response.data);
+      setUsers(res.data);
+      setFilterUsers(res.data);
     } catch (error) {
-      console.error("Error happened while getting user data:", error);
+      console.error("Error happened while fetching AdminUI user data:", error);
     }
   };
   useEffect(() => {
-    getData();
-    setSelectedLine([]);
+    fetchData();
+    setSelectedRow([]);
     setCurrentPage(1);
   }, []);
 
@@ -37,24 +37,24 @@ const AdminUI = () => {
     const allPagesCount = Math.ceil(filterUsers.length / maxItems);
     const startIdx = (currentPage - 1) * maxItems;
     const endIdx = startIdx + maxItems;
-    const pagUsers =
+    const paginationUsers =
       filterUsers.length > 0
         ? filterUsers.slice(startIdx, endIdx)
         : filterUsers;
 
     setTotalPages(allPagesCount);
-    setPagUsers(pagUsers);
+    setPaginationUsers(paginationUsers);
   }, [filterUsers, currentPage]);
 
   const handleSearch = (event) => {
-    const searchText = event.target.value.toLowerCase();
-    setSearchText(searchText);
+    const searchBar = event.target.value.toLowerCase();
+    setSearchBar(searchBar);
 
     const filteredUsers = users.filter(
       (user) =>
-        user.name.toLowerCase().includes(searchText) ||
-        user.email.toLowerCase().includes(searchText) ||
-        user.role.toLowerCase().includes(searchText)
+        user.name.toLowerCase().includes(searchBar) ||
+        user.email.toLowerCase().includes(searchBar) ||
+        user.role.toLowerCase().includes(searchBar)
     );
     setFilterUsers(filteredUsers);
     setCurrentPage(1);
@@ -63,9 +63,9 @@ const AdminUI = () => {
   const handleRowSelect = (event, user) => {
     const selected = event.target.checked;
     if (selected) {
-      setSelectedLine((prevLine) => [...prevLine, user]);
+      setSelectedRow((prevLine) => [...prevLine, user]);
     } else {
-      setSelectedLine((prevLine) =>
+      setSelectedRow((prevLine) =>
         prevLine.filter((selectedRow) => selectedRow.id !== user.id)
       );
     }
@@ -74,19 +74,19 @@ const AdminUI = () => {
   const handleSelectAll = (event) => {
     const selected = event.target.checked;
     if (selected) {
-      setSelectedLine([...pagUsers]);
+      setSelectedRow([...paginationUsers]);
     } else {
-      setSelectedLine([]);
+      setSelectedRow([]);
     }
   };
 
   const handleDeleteSelected = () => {
     const leftUsers = filterUsers.filter(
-      (user) => !selectedLine.includes(user)
+      (user) => !selectedRow.includes(user)
     );
     setUsers(leftUsers);
     setFilterUsers(leftUsers);
-    setSelectedLine([]);
+    setSelectedRow([]);
     if (currentPage > 1 && leftUsers.length <= (currentPage - 1) * 10) {
       setCurrentPage(currentPage - 1);
     }
@@ -104,7 +104,7 @@ const AdminUI = () => {
     const leftUsers = filterUsers.filter((u) => u.id !== user.id);
     setUsers(leftUsers);
     setFilterUsers(leftUsers);
-    setSelectedLine((prevLine) =>
+    setSelectedRow((prevLine) =>
       prevLine.filter((selectedRow) => selectedRow.id !== user.id)
     );
     if (currentPage > 1 && leftUsers.length <= (currentPage - 1) * 10) {
@@ -115,11 +115,11 @@ const AdminUI = () => {
   return (
     <div>
       <h1>Admin-UI</h1>
-      <Search searchText={searchText} handleSearch={handleSearch} />
+      <Search searchBar={searchBar} handleSearch={handleSearch} />
 
       <Table
-        users={pagUsers}
-        selectedLine={selectedLine}
+        users={paginationUsers}
+        selectedRow={selectedRow}
         handleRowSelect={handleRowSelect}
         handleEditUser={handleEditUser}
         handleDeleteUser={handleDeleteUser}
@@ -131,7 +131,7 @@ const AdminUI = () => {
         totalPages={totalPages}
         handleDeleteSelected={handleDeleteSelected}
         setCurrentPage={setCurrentPage}
-        selectedLine={selectedLine}
+        selectedRow={selectedRow}
         handleSelectAll={handleSelectAll}
       />
     </div>

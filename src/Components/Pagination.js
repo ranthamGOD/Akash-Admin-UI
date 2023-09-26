@@ -13,9 +13,9 @@ const Pagination = ({
   totalPages,
   handleDeleteSelected,
   setCurrentPage,
-  selectedLine,
+  selectedRow,
 }) => {
-  const handleChangePage = (page) => {
+  const handlePageChange = (page) => {
     setCurrentPage(page);
   };
 
@@ -26,7 +26,7 @@ const Pagination = ({
         <button
           key={i}
           className={currentPage === i ? "active" : ""}
-          onClick={() => handleChangePage(i)}
+          onClick={() => handlePageChange(i)}
         >
           {i}
         </button>
@@ -37,13 +37,13 @@ const Pagination = ({
 
   return (
     <div className="pag">
-      <div className="pag-buttons">
+      <div className="pagination-buttons">
         <div className="delete-selected">
           <button
-            disabled={selectedLine.length === 0}
+            disabled={selectedRow.length === 0}
             style={{
               backgroundColor:
-                selectedLine.length === 0 ? "lightgrey" : "tomato",
+                selectedRow.length === 0 ? "lightgrey" : "tomato",
               color: "white",
               borderRadius: "20px",
             }}
@@ -56,7 +56,7 @@ const Pagination = ({
           <button
             onClick={() => {
               if (currentPage !== 1) {
-                handleChangePage(1);
+                handlePageChange(1);
               }
             }}
             disabled={currentPage === 1}
@@ -65,21 +65,21 @@ const Pagination = ({
           </button>
           <button
             disabled={currentPage === 1}
-            onClick={() => handleChangePage(currentPage - 1)}
+            onClick={() => handlePageChange(currentPage - 1)}
           >
             <FontAwesomeIcon icon={faAngleLeft} />
           </button>
           {getPageCount()}
           <button
             disabled={currentPage === totalPages}
-            onClick={() => handleChangePage(currentPage + 1)}
+            onClick={() => handlePageChange(currentPage + 1)}
           >
             <FontAwesomeIcon icon={faAngleRight} />
           </button>
           <button
             onClick={() => {
               if (currentPage !== totalPages) {
-                handleChangePage(totalPages);
+                handlePageChange(totalPages);
               }
             }}
             disabled={currentPage === totalPages}
